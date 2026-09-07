@@ -1,0 +1,8 @@
+name: agent-toolkit
+version: 0.1.0
+description: Work-focused skills and agent configuration shared across Claude Code and OpenCode.
+license: UNLICENSED
+
+targets:
+  - claude
+  - opencode

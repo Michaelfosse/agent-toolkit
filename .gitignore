@@ -1,0 +1,11 @@
+# APM dependencies and build artifacts
+apm_modules/
+build/
+
+# Local environment and editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/

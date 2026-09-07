@@ -1,0 +1,1650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Working proposal for sharing AI agent capabilities with Agent Package Manager."
+    />
+    <title>Shared Agent Capabilities with APM</title>
+    <style>
+      :root {
+        --ink: #17212b;
+        --muted: #536170;
+        --line: #d7dde3;
+        --soft: #f4f6f8;
+        --blue: #175cd3;
+        --blue-soft: #eef4ff;
+        --green: #067647;
+        --green-soft: #ecfdf3;
+        --amber: #93370d;
+        --amber-soft: #fffaeb;
+        --white: #ffffff;
+        --max: 1180px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--white);
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--blue);
+      }
+
+      code,
+      pre {
+        font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      }
+
+      code {
+        padding: 0.1em 0.3em;
+        background: var(--soft);
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+
+      pre {
+        margin: 14px 0 0;
+        padding: 18px;
+        overflow-x: auto;
+        color: #e6edf3;
+        background: #17212b;
+        border-radius: 8px;
+        font-size: 0.84rem;
+        line-height: 1.55;
+      }
+
+      pre code {
+        padding: 0;
+        color: inherit;
+        background: transparent;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 880px;
+        margin-bottom: 20px;
+        font-size: clamp(2.4rem, 5vw, 4.4rem);
+        line-height: 1.06;
+        letter-spacing: -0.035em;
+      }
+
+      h2 {
+        margin-bottom: 14px;
+        font-size: clamp(1.7rem, 3vw, 2.5rem);
+        line-height: 1.16;
+        letter-spacing: -0.02em;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 1.08rem;
+        line-height: 1.35;
+      }
+
+      .spaced-heading {
+        margin-top: 28px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+
+      th,
+      td {
+        padding: 13px 14px;
+        border: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--soft);
+        font-weight: 700;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li + li {
+        margin-top: 7px;
+      }
+
+      .skip-link {
+        position: absolute;
+        top: -80px;
+        left: 16px;
+        z-index: 100;
+        padding: 8px 12px;
+        color: var(--white);
+        background: var(--ink);
+      }
+
+      .skip-link:focus {
+        top: 10px;
+      }
+
+      .page-header {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+        background: var(--white);
+      }
+
+      .header-inner,
+      .layout,
+      .hero-inner,
+      .footer-inner {
+        width: min(calc(100% - 40px), var(--max));
+        margin: 0 auto;
+      }
+
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .document-name {
+        font-weight: 700;
+      }
+
+      .document-status {
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .print-button {
+        padding: 7px 12px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: var(--white);
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .hero {
+        padding: 72px 0 60px;
+        background: var(--soft);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .hero-label,
+      .section-number {
+        margin-bottom: 12px;
+        color: var(--blue);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero-summary {
+        max-width: 850px;
+        margin-bottom: 28px;
+        color: var(--muted);
+        font-size: 1.16rem;
+      }
+
+      .hero-facts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        max-width: 920px;
+      }
+
+      .hero-fact {
+        padding: 16px;
+        border: 1px solid var(--line);
+        background: var(--white);
+        border-radius: 8px;
+      }
+
+      .hero-fact strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .hero-fact span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 230px minmax(0, 1fr);
+        gap: 52px;
+        align-items: start;
+      }
+
+      .toc {
+        position: sticky;
+        top: 24px;
+        padding: 34px 0;
+      }
+
+      .toc strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .toc a {
+        display: block;
+        padding: 6px 0;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.86rem;
+      }
+
+      .toc a:hover,
+      .toc a:focus {
+        color: var(--blue);
+        text-decoration: underline;
+      }
+
+      .content {
+        min-width: 0;
+      }
+
+      .section {
+        padding: 64px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .section-intro {
+        max-width: 780px;
+        margin-bottom: 28px;
+        color: var(--muted);
+        font-size: 1.04rem;
+      }
+
+      .callout {
+        margin: 24px 0;
+        padding: 18px 20px;
+        border-left: 4px solid var(--blue);
+        background: var(--blue-soft);
+      }
+
+      .callout strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .callout p {
+        margin-bottom: 0;
+      }
+
+      .callout.green {
+        border-color: var(--green);
+        background: var(--green-soft);
+      }
+
+      .callout.amber {
+        border-color: var(--amber);
+        background: var(--amber-soft);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .card {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .card p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 0.93rem;
+      }
+
+      .definition-grid {
+        display: grid;
+        grid-template-columns: 150px 1fr 1fr;
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+
+      .definition-grid > div {
+        padding: 14px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .definition-grid .term {
+        font-weight: 700;
+        background: var(--soft);
+      }
+
+      .definition-grid .note {
+        color: var(--muted);
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 26px 0;
+      }
+
+      .flow-step {
+        position: relative;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--white);
+      }
+
+      .flow-step:not(:last-child)::after {
+        position: absolute;
+        top: 22px;
+        right: -10px;
+        z-index: 2;
+        content: ">";
+        color: var(--blue);
+        font-weight: 800;
+      }
+
+      .flow-step span {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--blue);
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .flow-step p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 0.87rem;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .diagram {
+        padding: 20px;
+        border: 1px solid var(--line);
+        background: var(--soft);
+        border-radius: 8px;
+      }
+
+      .diagram-box {
+        padding: 13px;
+        border: 1px solid #aeb8c2;
+        background: var(--white);
+        border-radius: 6px;
+      }
+
+      .diagram-box + .diagram-box {
+        margin-top: 12px;
+      }
+
+      .diagram-box strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .diagram-box small {
+        color: var(--muted);
+      }
+
+      .arrow {
+        padding: 7px 0;
+        color: var(--blue);
+        text-align: center;
+        font-weight: 800;
+      }
+
+      .tree {
+        white-space: pre;
+      }
+
+      .timeline {
+        border-left: 2px solid var(--line);
+        margin-left: 12px;
+      }
+
+      .timeline-item {
+        position: relative;
+        padding: 0 0 28px 28px;
+      }
+
+      .timeline-item:last-child {
+        padding-bottom: 0;
+      }
+
+      .timeline-item::before {
+        position: absolute;
+        top: 3px;
+        left: -7px;
+        width: 12px;
+        height: 12px;
+        content: "";
+        background: var(--white);
+        border: 3px solid var(--blue);
+        border-radius: 50%;
+      }
+
+      .timeline-item p {
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        color: var(--green);
+        background: var(--green-soft);
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      .checklist {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .checklist li {
+        position: relative;
+        padding: 10px 0 10px 28px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .checklist li::before {
+        position: absolute;
+        top: 12px;
+        left: 2px;
+        content: "OK";
+        color: var(--green);
+        font-size: 0.7rem;
+        font-weight: 800;
+      }
+
+      .footer {
+        padding: 28px 0 40px;
+        color: var(--muted);
+        background: var(--soft);
+        font-size: 0.82rem;
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .footer p {
+        margin: 0;
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .toc {
+          position: static;
+          padding: 24px 0 0;
+          columns: 2;
+        }
+
+        .flow {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .flow-step:not(:last-child)::after {
+          display: none;
+        }
+      }
+
+      @media (max-width: 650px) {
+        .header-inner,
+        .layout,
+        .hero-inner,
+        .footer-inner {
+          width: min(calc(100% - 24px), var(--max));
+        }
+
+        .hero {
+          padding: 48px 0 42px;
+        }
+
+        .hero-facts,
+        .cards,
+        .flow,
+        .two-column {
+          grid-template-columns: 1fr;
+        }
+
+        .definition-grid {
+          grid-template-columns: 1fr;
+          border-top: 0;
+        }
+
+        .definition-grid > div {
+          border-top: 1px solid var(--line);
+        }
+
+        .section {
+          padding: 48px 0;
+        }
+
+        .toc {
+          columns: 1;
+        }
+
+        .document-status {
+          display: none;
+        }
+
+        .footer-inner {
+          flex-direction: column;
+        }
+      }
+
+      @media print {
+        body {
+          font-size: 10pt;
+        }
+
+        .print-button,
+        .toc {
+          display: none;
+        }
+
+        .layout {
+          display: block;
+          width: 100%;
+        }
+
+        .hero-inner,
+        .header-inner,
+        .footer-inner {
+          width: 100%;
+        }
+
+        .hero,
+        .section {
+          padding: 28px 0;
+        }
+
+        .card,
+        .callout,
+        .diagram,
+        pre,
+        table {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="page-header">
+      <div class="header-inner">
+        <div>
+          <div class="document-name">Shared Agent Capabilities with APM</div>
+          <div class="document-status">
+            Working proposal | Data and analytics engineering | September 2026
+          </div>
+        </div>
+        <button class="print-button" type="button" onclick="window.print()">
+          Print / Save PDF
+        </button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Purpose of this document</p>
+        <h1>
+          A practical model for sharing agent skills, system connections, and
+          team workflows
+        </h1>
+        <p class="hero-summary">
+          This proposal explains how Agent Package Manager (APM) could be used
+          to maintain a versioned internal library of agent capabilities. It
+          focuses on how packages are structured, how employees receive the
+          right capabilities, how access remains controlled, and how the team
+          contributes improvements.
+        </p>
+        <div class="hero-facts">
+          <div class="hero-fact">
+            <strong>Source of truth</strong
+            ><span>Reviewed Git repositories</span>
+          </div>
+          <div class="hero-fact">
+            <strong>Distribution</strong
+            ><span>APM manifest, install, and lockfile</span>
+          </div>
+          <div class="hero-fact">
+            <strong>Agent tools</strong
+            ><span>Initially Claude Code and OpenCode</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <nav class="toc" aria-label="Document contents">
+        <strong>Contents</strong>
+        <a href="#problem">1. Problem to solve</a>
+        <a href="#components">2. What is shared</a>
+        <a href="#apm">3. How APM works</a>
+        <a href="#repository">4. Repository model</a>
+        <a href="#profiles">5. Role profiles</a>
+        <a href="#onboarding">6. Employee onboarding</a>
+        <a href="#versioning">7. Versioning and updates</a>
+        <a href="#contribution">8. How people contribute</a>
+        <a href="#security">9. Access and governance</a>
+        <a href="#limitations">10. Current limitations</a>
+        <a href="#pilot">11. Suggested pilot</a>
+      </nav>
+
+      <main id="main" class="content">
+        <section class="section" id="problem">
+          <p class="section-number">1 | Problem to solve</p>
+          <h2>Agent capability is currently difficult to reuse consistently</h2>
+          <p class="section-intro">
+            People can create useful prompts, instructions, scripts, and
+            connectors, but these often remain in personal configurations or
+            individual project repositories. A colleague must rediscover the
+            same setup and lessons.
+          </p>
+
+          <div class="cards">
+            <article class="card">
+              <h3>Knowledge is fragmented</h3>
+              <p>
+                Platform-specific lessons are spread across documentation, code,
+                chat history, and individual agent configuration.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Setup is repeated</h3>
+              <p>
+                Each person configures skills and MCP servers separately for
+                each agent tool and project.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Quality varies</h3>
+              <p>
+                There is no common review, version, ownership, or retirement
+                process for agent guidance.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Onboarding depends on people</h3>
+              <p>
+                New employees need colleagues to explain which tools,
+                conventions, and access patterns apply to their role.
+              </p>
+            </article>
+          </div>
+
+          <div class="callout">
+            <strong>Proposed outcome</strong>
+            <p>
+              A person should be able to install an approved role package and
+              receive the same reviewed skills, instructions, commands, agents,
+              and MCP declarations as the rest of the team.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="components">
+          <p class="section-number">2 | What is shared</p>
+          <h2>The package contains several different capability types</h2>
+          <p class="section-intro">
+            These terms are related but not interchangeable. A useful package
+            may contain only one or two of them.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Component</th>
+                <th scope="col">What it provides</th>
+                <th scope="col">Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Skill</th>
+                <td>
+                  A focused workflow the agent loads when the user's request
+                  matches its description.
+                </td>
+                <td>
+                  Discover a Fabric table and verify its schema before writing
+                  SQL.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Instruction</th>
+                <td>
+                  A rule that applies automatically, globally or to particular
+                  file types.
+                </td>
+                <td>
+                  Use explicit PySpark schemas and never infer production
+                  schemas.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">MCP server</th>
+                <td>
+                  A declared connection that exposes approved tools or data to
+                  the agent.
+                </td>
+                <td>
+                  Read Fabric metadata or query an approved Databricks
+                  interface.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Script</th>
+                <td>
+                  Deterministic automation used when exact behavior is more
+                  reliable than generated steps.
+                </td>
+                <td>
+                  Validate a notebook, inspect a wheel, or check for hard-coded
+                  IDs.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Named agent</th>
+                <td>
+                  A specialist role with a defined task, expected output, and
+                  optional tool restrictions.
+                </td>
+                <td>
+                  A read-only release reviewer or pipeline troubleshooter.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Command</th>
+                <td>
+                  An explicitly invoked, repeatable procedure exposed in a
+                  supported agent client.
+                </td>
+                <td>
+                  Run a standard pre-release validation and summarize failures.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Profile</th>
+                <td>
+                  An APM package that depends on a curated combination of the
+                  components above. "Profile" is our organizational term, not a
+                  separate APM primitive.
+                </td>
+                <td>
+                  Data engineer, Fabric engineer, or Databricks application
+                  developer.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section" id="apm">
+          <p class="section-number">3 | How APM works</p>
+          <h2>
+            One manifest is translated into the configuration each agent tool
+            expects
+          </h2>
+          <p class="section-intro">
+            APM is a dependency manager for agent configuration. It uses a
+            committed <code>apm.yml</code> manifest and creates an
+            <code>apm.lock.yaml</code> lockfile that records exactly what was
+            resolved.
+          </p>
+
+          <div class="flow" role="group" aria-label="APM installation flow">
+            <article class="flow-step">
+              <span>STEP 1</span>
+              <h3>Author</h3>
+              <p>
+                Teams store packages and profiles in Git with normal
+                pull-request review.
+              </p>
+            </article>
+            <article class="flow-step">
+              <span>STEP 2</span>
+              <h3>Install</h3>
+              <p>
+                <code>apm install</code> resolves dependencies, checks content,
+                and writes client files.
+              </p>
+            </article>
+            <article class="flow-step">
+              <span>STEP 3</span>
+              <h3>Lock</h3>
+              <p>
+                The lockfile pins source commits and hashes for reproducible
+                installation.
+              </p>
+            </article>
+            <article class="flow-step">
+              <span>STEP 4</span>
+              <h3>Compile</h3>
+              <p>
+                <code>apm compile</code> builds root context such as
+                <code>CLAUDE.md</code> and <code>AGENTS.md</code>.
+              </p>
+            </article>
+          </div>
+
+          <h3>Commands a consumer runs</h3>
+          <pre><code># Install the approved profile into a project
+apm install company/agent-capabilities/profiles/data-engineer#v1.2.0 \
+  --target claude,opencode
+
+# Compile shared instructions for both clients
+apm compile --target claude,opencode
+
+# Confirm installed MCP declarations and package integrity
+apm mcp list
+apm audit</code></pre>
+
+          <h3 class="spaced-heading">What APM writes</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Source in package</th>
+                <th>Claude Code</th>
+                <th>OpenCode</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.apm/skills/</code></td>
+                <td><code>.claude/skills/</code></td>
+                <td><code>.agents/skills/</code></td>
+              </tr>
+              <tr>
+                <td><code>.apm/instructions/</code></td>
+                <td><code>.claude/rules/</code> and compiled context</td>
+                <td>Compiled into <code>AGENTS.md</code></td>
+              </tr>
+              <tr>
+                <td><code>.apm/agents/</code></td>
+                <td><code>.claude/agents/</code></td>
+                <td><code>.opencode/agents/</code></td>
+              </tr>
+              <tr>
+                <td><code>.apm/prompts/</code></td>
+                <td><code>.claude/commands/</code></td>
+                <td><code>.opencode/commands/</code></td>
+              </tr>
+              <tr>
+                <td><code>dependencies.mcp</code></td>
+                <td><code>.mcp.json</code></td>
+                <td><code>opencode.json</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout amber">
+            <strong>Install and compile are separate</strong>
+            <p>
+              <code>apm install</code> resolves and deploys package primitives.
+              <code>apm compile</code> generates root instruction context. A
+              standard setup script should run both in the correct order.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="repository">
+          <p class="section-number">4 | Repository model</p>
+          <h2>
+            A private Git repository can hold reusable packages and role
+            profiles
+          </h2>
+          <p class="section-intro">
+            The first version can use one private repository. Access to the
+            repository controls who can install private capability content. More
+            sensitive packages can later move to separate repositories with
+            narrower permissions.
+          </p>
+
+          <div class="two-column">
+            <div>
+              <h3>Illustrative structure</h3>
+              <pre class="tree"><code>agent-capabilities/
+|-- packages/
+|   |-- core/
+|   |   |-- apm.yml
+|   |   `-- .apm/skills/...
+|   |-- fabric/
+|   |-- synapse/
+|   |-- databricks/
+|   `-- sap/
+|-- profiles/
+|   |-- data-engineer/
+|   |-- fabric-engineer/
+|   `-- platform-reviewer/
+|-- docs/
+`-- apm.yml  # optional catalog</code></pre>
+            </div>
+            <div
+              class="diagram"
+              role="group"
+              aria-label="Repository dependency model"
+            >
+              <div class="diagram-box">
+                <strong>Profile: Fabric engineer</strong
+                ><small
+                  >Defines targets and selects approved dependencies</small
+                >
+              </div>
+              <div class="arrow">depends on</div>
+              <div class="diagram-box">
+                <strong>Core package</strong
+                ><small>Shared engineering and security practices</small>
+              </div>
+              <div class="diagram-box">
+                <strong>Fabric package</strong
+                ><small>Skills, commands, and platform guidance</small>
+              </div>
+              <div class="diagram-box">
+                <strong>MCP declarations</strong
+                ><small>Approved metadata and platform connections</small>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="spaced-heading">Recommended initial boundary</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Content</th>
+                <th>Placement</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Generic skill authoring, review, Git, and testing guidance
+                </td>
+                <td>Core package</td>
+                <td>Applicable across teams and platforms</td>
+              </tr>
+              <tr>
+                <td>Fabric, Databricks, Synapse, and SAP workflows</td>
+                <td>Platform packages</td>
+                <td>Independent ownership and specialist review</td>
+              </tr>
+              <tr>
+                <td>
+                  Internal endpoints, governed metadata, business-specific
+                  instructions
+                </td>
+                <td>Private restricted package</td>
+                <td>Needs tighter repository access and review</td>
+              </tr>
+              <tr>
+                <td>Credentials, tokens, personal data, production records</td>
+                <td>Never in a package</td>
+                <td>
+                  Remain in identity systems, secret stores, or user environment
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section" id="profiles">
+          <p class="section-number">5 | Role profiles</p>
+          <h2>A profile selects a useful set of capabilities for a role</h2>
+          <p class="section-intro">
+            A profile is an ordinary APM package whose main purpose is
+            composition. It can depend on shared packages and declare the MCP
+            servers required for that role.
+          </p>
+
+          <h3>Example profile manifest</h3>
+          <pre><code>name: company-data-engineer
+version: 1.2.0
+description: Approved baseline for data engineers.
+
+targets:
+  - claude
+  - opencode
+
+dependencies:
+  apm:
+    - git: https://github.com/company/agent-capabilities.git
+      path: packages/core
+      ref: ^1.0.0
+
+    - git: https://github.com/company/agent-capabilities.git
+      path: packages/fabric
+      ref: ^1.2.0
+
+    - git: https://github.com/company/agent-capabilities.git
+      path: packages/databricks
+      ref: ^1.1.0
+
+  mcp:
+    - name: fabric-metadata
+      registry: false
+      transport: http
+      url: https://mcp.internal.example/fabric
+      headers:
+        Authorization: "Bearer ${FABRIC_MCP_TOKEN}"</code></pre>
+
+          <div class="callout amber">
+            <strong>The URL and token name above are placeholders</strong>
+            <p>
+              The real authentication model must be approved for each MCP
+              server. Tokens are not committed to the profile. APM uses
+              environment-variable indirection or target-native authentication
+              where supported.
+            </p>
+          </div>
+
+          <h3>Possible profiles</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th>Likely package dependencies</th>
+                <th>Likely connections</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Data engineer</td>
+                <td>Core, Fabric, Databricks, SQL, CI/CD</td>
+                <td>Metadata and read-only platform tools</td>
+              </tr>
+              <tr>
+                <td>Fabric engineer</td>
+                <td>Core, Fabric notebooks, pipelines, deployment</td>
+                <td>Fabric metadata, approved SQL endpoint access</td>
+              </tr>
+              <tr>
+                <td>Analytics developer</td>
+                <td>Core, SQL, semantic model and report validation</td>
+                <td>Catalog and read-only analytics metadata</td>
+              </tr>
+              <tr>
+                <td>Platform reviewer</td>
+                <td>Core, security review, release validation</td>
+                <td>Read-only repository and platform evidence</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section" id="onboarding">
+          <p class="section-number">6 | Employee onboarding</p>
+          <h2>
+            The agent setup can be reproduced in minutes after access is
+            approved
+          </h2>
+          <p class="section-intro">
+            This does not replace account creation, platform training, or access
+            approval. It reduces the manual work of locating and configuring the
+            team's agent capabilities after those prerequisites are available.
+          </p>
+
+          <div class="two-column">
+            <div>
+              <h3>Prerequisites owned by existing processes</h3>
+              <ul>
+                <li>Company identity and device setup</li>
+                <li>Repository access</li>
+                <li>Platform roles for Fabric, Databricks, Synapse, or SAP</li>
+                <li>Claude Code or OpenCode installation</li>
+                <li>Authentication for approved MCP services</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Agent capability setup</h3>
+              <pre><code># 1. Authenticate to private Git hosting
+gh auth login
+
+# 2. Install the role profile
+apm install company/agent-capabilities/profiles/data-engineer#v1.2.0 \
+  --target claude,opencode
+
+# 3. Build root instructions
+apm compile --target claude,opencode
+
+# 4. Verify the result
+apm audit
+apm mcp list</code></pre>
+            </div>
+          </div>
+
+          <h3 class="spaced-heading">Example onboarding sequence</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <h3>Role selected</h3>
+              <p>
+                The manager or technical lead assigns the approved data-engineer
+                profile.
+              </p>
+            </div>
+            <div class="timeline-item">
+              <h3>One installation</h3>
+              <p>
+                APM installs the same pinned capabilities used by colleagues and
+                writes the correct files for the selected agent tools.
+              </p>
+            </div>
+            <div class="timeline-item">
+              <h3>Connections verified</h3>
+              <p>
+                The employee authenticates separately. A read-only test confirms
+                what the agent can and cannot access.
+              </p>
+            </div>
+            <div class="timeline-item">
+              <h3>Guided first task</h3>
+              <p>
+                The employee uses a known skill on a low-risk task and compares
+                the result with the team's expected workflow.
+              </p>
+            </div>
+            <div class="timeline-item">
+              <h3>Normal work begins</h3>
+              <p>
+                The employee has a documented baseline without copying
+                configuration from another person's machine.
+              </p>
+            </div>
+          </div>
+
+          <div class="callout green">
+            <strong>What "minutes" means</strong>
+            <p>
+              The package installation and configuration can be short. Waiting
+              for platform permissions, completing training, and learning the
+              business domain remain separate onboarding activities.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="versioning">
+          <p class="section-number">7 | Versioning and updates</p>
+          <h2>
+            Git tags describe available versions; the lockfile records the exact
+            installed content
+          </h2>
+          <p class="section-intro">
+            A profile can request an exact tag or a compatible version range.
+            APM resolves that request to a specific commit and records the
+            result in <code>apm.lock.yaml</code>.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Purpose</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Package version</td>
+                <td>States the version published by the package owner</td>
+                <td><code>version: 1.2.0</code></td>
+              </tr>
+              <tr>
+                <td>Git tag</td>
+                <td>Marks released source in the repository</td>
+                <td><code>v1.2.0</code></td>
+              </tr>
+              <tr>
+                <td>Dependency constraint</td>
+                <td>Defines which releases a profile accepts</td>
+                <td><code>ref: ^1.2.0</code></td>
+              </tr>
+              <tr>
+                <td>Lockfile</td>
+                <td>Pins the resolved tag, commit, and content hash</td>
+                <td><code>apm.lock.yaml</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="spaced-heading">
+            Recommended first approach: lockstep releases
+          </h3>
+          <p>
+            For a small initial repository, release all packages and profiles
+            together under one version. This is simpler to explain, test, and
+            support. Independent package versions can be introduced later if
+            release cycles genuinely diverge.
+          </p>
+
+          <div class="flow" role="group" aria-label="Version release flow">
+            <article class="flow-step">
+              <span>1</span>
+              <h3>Change merged</h3>
+              <p>A reviewed capability change reaches the release branch.</p>
+            </article>
+            <article class="flow-step">
+              <span>2</span>
+              <h3>Version tagged</h3>
+              <p>
+                CI validates and publishes a new Git tag, for example
+                <code>v1.3.0</code>.
+              </p>
+            </article>
+            <article class="flow-step">
+              <span>3</span>
+              <h3>Existing users stay pinned</h3>
+              <p>
+                Their lockfile keeps the previous known version until they
+                update.
+              </p>
+            </article>
+            <article class="flow-step">
+              <span>4</span>
+              <h3>Update is deliberate</h3>
+              <p>
+                <code>apm install --update</code> resolves and records the
+                approved newer version.
+              </p>
+            </article>
+          </div>
+
+          <div class="callout">
+            <strong>Recommended project policy</strong>
+            <p>
+              Commit <code>apm.yml</code> and <code>apm.lock.yaml</code>. Ignore
+              <code>apm_modules/</code>. Decide centrally whether generated
+              client files are committed or reproduced during setup and CI;
+              apply one policy consistently.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="contribution">
+          <p class="section-number">8 | How people contribute</p>
+          <h2>
+            Contribution uses the same Git and pull-request practices as code
+          </h2>
+          <p class="section-intro">
+            The goal is broad contribution with clear ownership. A
+            subject-matter expert should be able to propose a capability without
+            becoming the sole approver or long-term support contact by accident.
+          </p>
+
+          <div class="two-column">
+            <div>
+              <h3>Contribution path</h3>
+              <ol>
+                <li>
+                  Describe a repeated task and provide realistic trigger
+                  examples.
+                </li>
+                <li>
+                  Choose the right component: skill, instruction, script, MCP
+                  declaration, or profile change.
+                </li>
+                <li>
+                  Create a branch from a template and add tests or manual
+                  scenarios.
+                </li>
+                <li>
+                  Open a pull request with scope, risk, evidence, and ownership.
+                </li>
+                <li>
+                  Receive technical and platform/security review as required.
+                </li>
+                <li>Merge into the next version and update release notes.</li>
+              </ol>
+            </div>
+            <div>
+              <h3>Minimum review checklist</h3>
+              <ul class="checklist">
+                <li>A real repeated problem is identified</li>
+                <li>Triggers and non-triggers are tested</li>
+                <li>Examples contain no secrets or sensitive records</li>
+                <li>Side effects and required approvals are explicit</li>
+                <li>Claude Code and OpenCode placement is validated</li>
+                <li>An owner and review date are recorded</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 class="spaced-heading">Suggested ownership</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Responsibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Contributor</td>
+                <td>
+                  Provides the use case, initial content, examples, and
+                  validation evidence.
+                </td>
+              </tr>
+              <tr>
+                <td>Capability owner</td>
+                <td>
+                  Maintains scope, quality, compatibility, versions, and
+                  retirement decisions.
+                </td>
+              </tr>
+              <tr>
+                <td>Platform reviewer</td>
+                <td>
+                  Checks technical correctness for Fabric, Databricks, Synapse,
+                  SAP, or another system.
+                </td>
+              </tr>
+              <tr>
+                <td>Security reviewer</td>
+                <td>
+                  Reviews new MCP servers, credentials, data exposure,
+                  executable scripts, and side effects.
+                </td>
+              </tr>
+              <tr>
+                <td>Repository maintainer</td>
+                <td>
+                  Manages releases, CI, package structure, and contribution
+                  standards.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section" id="security">
+          <p class="section-number">9 | Access and governance</p>
+          <h2>Sharing configuration does not grant system access</h2>
+          <p class="section-intro">
+            The package may describe a connection, but each platform still
+            authorizes the signed-in user or service identity. This separation
+            should remain explicit in documentation and testing.
+          </p>
+
+          <div class="cards">
+            <article class="card">
+              <h3>Repository access</h3>
+              <p>
+                Controls who can read and install private capability content.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Platform identity</h3>
+              <p>
+                Controls which Fabric, Databricks, Synapse, or SAP resources a
+                user can access.
+              </p>
+            </article>
+            <article class="card">
+              <h3>MCP tool scope</h3>
+              <p>
+                Controls which functions the server exposes. Tool allowlists
+                should be used where practical.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Production controls</h3>
+              <p>
+                CI/CD approvals and platform permissions remain authoritative
+                for material actions.
+              </p>
+            </article>
+          </div>
+
+          <div class="callout amber">
+            <strong>MCP is a trust boundary</strong>
+            <p>
+              An MCP server exposes tools or data to the agent and requires its
+              own owner, threat review, authentication model, logging, support,
+              and retirement plan. APM intentionally restricts untrusted
+              transitive self-defined MCP declarations unless the consumer
+              explicitly trusts them.
+            </p>
+          </div>
+
+          <h3>Non-negotiable rules</h3>
+          <ul>
+            <li>
+              No credentials, tokens, connection strings, or production records
+              in packages.
+            </li>
+            <li>
+              Read-only tools are the default for initial platform integrations.
+            </li>
+            <li>
+              Material writes require explicit user confirmation and existing
+              platform authorization.
+            </li>
+            <li>
+              Agent hooks provide convenience, not the only enforcement for
+              tests or security.
+            </li>
+            <li>Every executable script and MCP server has a named owner.</li>
+          </ul>
+        </section>
+
+        <section class="section" id="limitations">
+          <p class="section-number">10 | Current limitations</p>
+          <h2>
+            The model is portable, but not every feature is identical across
+            agent tools
+          </h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Limitation</th>
+                <th>Practical treatment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Claude Code and OpenCode use different native file locations
+                  and formats.
+                </td>
+                <td>
+                  Keep neutral source under <code>.apm/</code> and let APM
+                  deploy per target.
+                </td>
+              </tr>
+              <tr>
+                <td>APM hooks do not currently target OpenCode.</td>
+                <td>
+                  Use a shared script with separate Claude hook and OpenCode
+                  plugin adapters only when automatic behavior is needed.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Self-defined MCP servers are executable trust boundaries.
+                </td>
+                <td>
+                  Keep them direct, documented dependencies and require explicit
+                  security review.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  A skill can become stale or conflict with another skill.
+                </td>
+                <td>
+                  Use owners, versions, trigger tests, usage feedback, and
+                  retirement dates.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Package installation cannot provide business understanding.
+                </td>
+                <td>
+                  Use profiles to support, not replace, training, mentoring, and
+                  domain documentation.
+                </td>
+              </tr>
+              <tr>
+                <td>APM is still evolving.</td>
+                <td>
+                  Pin the supported APM version, test upgrades, and avoid making
+                  governance dependent on undocumented behavior.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section" id="pilot">
+          <p class="section-number">11 | Suggested pilot</p>
+          <h2>
+            Test the complete sharing process with a small, read-only scope
+          </h2>
+          <p class="section-intro">
+            The pilot should test authoring, review, installation by another
+            employee, update behavior, and measurable task value. It should not
+            attempt to build all platform packages at once.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Pilot item</th>
+                <th>Suggested scope</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Profile</td>
+                <td>
+                  One data-engineer profile targeting Claude Code and OpenCode
+                </td>
+              </tr>
+              <tr>
+                <td>Core capability</td>
+                <td>Skill authoring and contribution workflow</td>
+              </tr>
+              <tr>
+                <td>Work capability 1</td>
+                <td>Metadata-first Fabric SQL and schema discovery</td>
+              </tr>
+              <tr>
+                <td>Work capability 2</td>
+                <td>Thin notebook and shared Python library guidance</td>
+              </tr>
+              <tr>
+                <td>MCP</td>
+                <td>One approved read-only metadata connection</td>
+              </tr>
+              <tr>
+                <td>Users</td>
+                <td>
+                  Original author plus two employees who did not build the
+                  package
+                </td>
+              </tr>
+              <tr>
+                <td>Evidence</td>
+                <td>
+                  Setup time, task time, successful reuse, quality findings, and
+                  security exceptions
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="spaced-heading">Questions for management</h3>
+          <ol>
+            <li>
+              Which two repeated tasks are important enough to test first?
+            </li>
+            <li>
+              Who should own the common repository and approve platform-specific
+              content?
+            </li>
+            <li>Which private Git host and access model should be used?</li>
+            <li>Which MCP connection can be approved for a read-only pilot?</li>
+            <li>
+              What evidence would justify extending the approach to more teams
+              and platforms?
+            </li>
+          </ol>
+
+          <div class="callout green">
+            <strong>Concrete pilot deliverable</strong>
+            <p>
+              A second employee can install the pinned data-engineer profile in
+              a clean project, verify the approved MCP connection, use both work
+              skills successfully, and later update to a new reviewed version
+              without manual file copying.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p>
+          <strong>Status:</strong> working proposal, not an approved
+          architecture
+        </p>
+        <p>
+          <strong>Technical baseline:</strong> Microsoft APM v0.29.0
+          documentation
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
