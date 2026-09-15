@@ -14,6 +14,17 @@ Prioritize a candidate when it is:
 
 ## Priority 1: Review Next
 
+### powerbi-developer-profile
+
+Status: included as `packages/powerbi-developer`.
+
+Purpose: install focused Microsoft Power BI authoring skills, local and remote
+Power BI MCP access, and an evidence-based rendered-report quality loop without
+including the broader Fabric skill bundle.
+
+Boundary: exclude tenant IDs, workspace IDs, semantic model IDs, credentials,
+report data, and client-specific report definitions.
+
 ### metadata-first-fabric-sql
 
 Purpose: discover repository and live Fabric metadata before writing SQL or assuming schemas.

@@ -46,7 +46,9 @@ Generated files should be inspected during tests but are not the primary source.
 
 ## Growth Path
 
-Add individual skills while they share one audience, trust boundary, and release cadence.
+Add individual skills to the core package while they share one audience, trust
+boundary, and release cadence. Add a profile package under `packages/` when it
+has an independent install audience or external capability configuration.
 
 Split into multiple packages when one of these becomes true:
 
@@ -55,6 +57,11 @@ Split into multiple packages when one of these becomes true:
 - Dependencies or MCP servers differ materially by role.
 - Skills need independent versioning or release approval.
 - Target-specific executable adapters become large enough to maintain separately.
+
+`packages/powerbi-developer` is the first profile package. It has a distinct
+Power BI developer audience, Microsoft skill and MCP dependencies, a Windows
+Power BI Desktop prerequisite, and a preview-tool update cadence. It must remain
+free of general Fabric workflow skills; a future Fabric profile can own those.
 
 A likely later shape is:
 

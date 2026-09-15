@@ -14,6 +14,8 @@ Included:
 - Repository instructions for maintaining this package safely.
 - A Claude Code and OpenCode compatibility guide.
 - A review queue of skill candidates identified from existing work projects.
+- The separately installable `packages/powerbi-developer` profile for focused
+  Power BI report and semantic-model development.
 
 Not included:
 
@@ -36,6 +38,8 @@ APM supports single packages, marketplaces, and monorepos containing many packag
 ```text
 agent-toolkit/
 |-- apm.yml
+|-- packages/
+|   `-- powerbi-developer/       # independently installable Power BI profile
 |-- .apm/
 |   |-- instructions/
 |   |   `-- repository.instructions.md
