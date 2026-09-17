@@ -6,8 +6,9 @@ remote Power BI MCP servers, and adds a quality loop for rendered report review.
 
 ## Included
 
-- Microsoft Power BI skills for report planning, design, PBIR/PBIP authoring,
-  report management, and semantic-model authoring.
+- Microsoft's focused Power BI authoring plugin for report planning, design,
+  PBIR/PBIP operations, report management, and semantic-model authoring. Its
+  deployed skill names follow the current upstream package.
 - `powerbi-modeling-mcp` for local semantic-model inspection, model changes,
   DAX validation, and PBIP/TMDL workflows.
 - `powerbi-remote` for querying published semantic models and inspecting
@@ -17,7 +18,8 @@ remote Power BI MCP servers, and adds a quality loop for rendered report review.
 - `powerbi-developer-setup` for native Windows and WSL-plus-Windows environment
   detection, Desktop-bound tooling checks, and WSL wrapper guidance.
 - `powerbi-deploy-screenshot-loop` for opt-in deployment, refresh, published
-  PNG export, and service-rendered review in an approved development workspace.
+  PNG export, service-rendered review, guarded iteration, and pull-request handoff
+  in an approved development workspace.
 - `check-powerbi-published-validation` command for a read-only prerequisite
   check before service validation.
 - `check-powerbi-environment` command for Windows and WSL readiness checks.
@@ -63,6 +65,10 @@ Published PNG validation additionally requires Fabric CLI, an approved
 development workspace on Fabric, Premium, or Embedded capacity, and the tenant
 setting that allows image export. The human provides workspace, report, and
 semantic-model names; the skill uses `fab` to resolve their IDs before actions.
+For validate-before-commit work, it uses a repository-approved, narrowly scoped
+`fab deploy` configuration with unpublish disabled. It verifies the workspace's
+Git connection and branch before deployment, then reconciles the workspace to
+the final pushed commit before creating a pull request.
 
 See `docs/setup.md` for the local and remote workflows and `docs/maintenance.md`
 for controlled updates.

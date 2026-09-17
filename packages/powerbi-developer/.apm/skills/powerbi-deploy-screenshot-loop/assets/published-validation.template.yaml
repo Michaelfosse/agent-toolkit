@@ -6,8 +6,16 @@ published_validation:
   semantic_model_name: "<semantic model display name>"
   environment: development
   deployment:
-    command: "<project-approved deployment command>"
+    mode: local-candidate
+    config: "<project-approved fab deploy config path>"
+    target_environment: development
+    require_workspace_git_alignment: true
     refresh_semantic_model: false
+    max_visual_iterations: 3
+  release:
+    commit_after_validation: true
+    push_after_validation: true
+    create_pull_request: true
   scenarios:
     - name: default-page
       page_display_name: "<page display name>"

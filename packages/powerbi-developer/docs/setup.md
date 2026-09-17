@@ -68,6 +68,15 @@ PNG export download requires a binary-capable client because `fab api` is not a
 binary artifact downloader. See the skill's published-validation template for
 the project-local configuration shape.
 
+Before deployment, the skill compares the workspace Git provider, repository,
+directory, branch, and detailed status with the local checkout. It changes a
+workspace branch only when the workspace has no changes or conflicts and the
+human approves reconnection. Validate-before-commit loops use a project-owned,
+scoped `fab deploy` configuration; Git-sync loops require candidate commits to
+be pushed before `updateFromGit`. After a passing local-deployment loop, the
+skill commits and pushes intended files, reconciles the workspace to that exact
+commit, and creates the requested pull request.
+
 Use `check-powerbi-published-validation` before requesting a service-validation
 run. It checks Fabric CLI, Fabric authentication, and Azure CLI readiness without
 installing or authenticating. When Fabric CLI is missing, it provides an explicit

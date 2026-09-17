@@ -1,5 +1,5 @@
 name: powerbi-developer
-version: 0.2.0
+version: 0.3.0
 description: Power BI report and semantic-model development profile for Claude Code and OpenCode.
 license: MIT
 includes: auto
