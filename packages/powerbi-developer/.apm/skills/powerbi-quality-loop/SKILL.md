@@ -28,6 +28,10 @@ those operations.
    evidence. A screenshot alone does not prove measure correctness, visual
    bindings, slicers, drillthrough, bookmarks, or access behavior.
 
+For service-rendered evidence after deployment or refresh, hand off to
+`powerbi-deploy-screenshot-loop`. It requires explicit human-provided target
+names and authorization for every deployment, refresh, and export action.
+
 Read these references when needed:
 
 - [Desktop Bridge workflow](references/desktop-bridge.md)

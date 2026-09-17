@@ -1,0 +1,16 @@
+# Copy this file into the consuming project and replace only approved values.
+# The profile never stores real workspace names or IDs.
+published_validation:
+  workspace_name: "<development workspace name>"
+  report_name: "<report display name>"
+  semantic_model_name: "<semantic model display name>"
+  environment: development
+  deployment:
+    command: "<project-approved deployment command>"
+    refresh_semantic_model: false
+  scenarios:
+    - name: default-page
+      page_display_name: "<page display name>"
+      locale: en-US
+      report_level_filter: null
+      bookmark_name: null

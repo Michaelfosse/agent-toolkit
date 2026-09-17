@@ -4,6 +4,10 @@ Power BI Desktop Bridge is a local Windows named-pipe API, not an MCP server.
 It reloads PBIR files and captures rendered screenshots from a running Power BI
 Desktop instance. It cannot run remotely from WSL or validate user interactions.
 
+On native Windows, run `powerbi-desktop` directly. When the agent runs in WSL,
+use the wrapper described by `powerbi-developer-setup`; WSL Node.js cannot access
+the Windows named pipe. Translate WSL input and output paths with `wslpath -w`.
+
 1. Enable `Enable external tool access to Power BI Desktop through secure local APIs` in Power BI Desktop Preview Features.
 2. Open the development PBIP and save any pending Desktop edits.
 3. Identify the intended process and inspect its available preview operations:

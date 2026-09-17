@@ -1,6 +1,8 @@
 # APM dependencies and build artifacts
 apm_modules/
 build/
+__pycache__/
+*.pyc
 
 # Local environment and editor files
 .env

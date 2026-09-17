@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+powershell="/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+
+if [[ ! -x "$powershell" ]]; then
+    printf 'Windows PowerShell was not found. Run this wrapper from WSL on the Power BI Desktop host.\n' >&2
+    exit 1
+fi
+
+exec "$powershell" \
+    -NoProfile \
+    -NonInteractive \
+    -ExecutionPolicy Bypass \
+    -File "$(wslpath -w "$script_dir/powerbi-desktop-windows.ps1")" \
+    "$@"

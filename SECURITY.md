@@ -31,6 +31,6 @@ Before adding `scripts/`, hooks, plugins, or MCP declarations:
 - Search the complete Git history for secrets and private identifiers.
 - Review every example and fixture, not only executable files.
 - Confirm dependency sources and pinned versions.
-- Add a license only after deciding what may be reused publicly.
+- Confirm that the declared license still matches what may be reused publicly.
 
 Report a suspected disclosure privately to the repository owner. Do not open a public issue containing secret values.

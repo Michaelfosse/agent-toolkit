@@ -1,7 +1,7 @@
 name: powerbi-developer
-version: 0.1.0
+version: 0.2.0
 description: Power BI report and semantic-model development profile for Claude Code and OpenCode.
-license: UNLICENSED
+license: MIT
 includes: auto
 
 targets:
@@ -18,12 +18,16 @@ dependencies:
       ref: main
   mcp:
     # Local read/write semantic-model development for PBIP, Desktop, and
-    # Fabric models. The server asks for its own write/query confirmations.
+    # Fabric models. Profile instructions govern approval for mutations.
     - name: powerbi-modeling-mcp
       registry: false
       transport: stdio
-      command: npx
+      command: cmd.exe
       args:
+        - /d
+        - /s
+        - /c
+        - npx.cmd
         - -y
         - "@microsoft/powerbi-modeling-mcp@latest"
         - --start

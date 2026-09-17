@@ -144,6 +144,7 @@ Skills are the most portable primitive and should carry most workflows. Instruct
 
 Runtime callbacks are not portable through APM to OpenCode. Use shared validation logic with thin target-specific adapters as described in `docs/runtime-adapters.md`.
 
-## Status
+## License
 
-This repository is local-only and has no license or public support commitment. Decide the private/public boundary before creating a remote or copying content from another project.
+Released under the [MIT License](LICENSE). This project has no public support
+commitment. Review preview dependencies and their upstream terms before use.

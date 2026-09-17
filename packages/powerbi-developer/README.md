@@ -14,6 +14,13 @@ remote Power BI MCP servers, and adds a quality loop for rendered report review.
   published report metadata.
 - `powerbi-quality-loop` for screenshot review, visualization standards, and
   evidence-based report QA.
+- `powerbi-developer-setup` for native Windows and WSL-plus-Windows environment
+  detection, Desktop-bound tooling checks, and WSL wrapper guidance.
+- `powerbi-deploy-screenshot-loop` for opt-in deployment, refresh, published
+  PNG export, and service-rendered review in an approved development workspace.
+- `check-powerbi-published-validation` command for a read-only prerequisite
+  check before service validation.
+- `check-powerbi-environment` command for Windows and WSL readiness checks.
 
 ## Not Included
 
@@ -39,18 +46,23 @@ The Power BI report authoring loop requires a Windows machine with Power BI
 Desktop and Node.js 20 or later. Enable Power BI Desktop's preview feature
 `Enable external tool access to Power BI Desktop through secure local APIs`.
 
-Install the local authoring tools on the Windows machine:
+The profile runs local authoring tools through Windows `npx.cmd`, which downloads
+and caches them automatically on first use. To smoke-test them manually:
 
 ```powershell
-npm install -g @microsoft/powerbi-report-authoring-cli@latest @microsoft/powerbi-desktop-bridge-cli@latest
-powerbi-report-author --version
-powerbi-desktop --version
+npx.cmd -y @microsoft/powerbi-report-authoring-cli@latest --version
+npx.cmd -y @microsoft/powerbi-desktop-bridge-cli@latest --version
 ```
 
 `powerbi-modeling-mcp` runs through `npx`; it requires Node.js when the MCP
 client starts it. The remote MCP requires the tenant preview setting for the
 Power BI MCP endpoint, semantic model Build permission, and client-supported
 Microsoft Entra authentication.
+
+Published PNG validation additionally requires Fabric CLI, an approved
+development workspace on Fabric, Premium, or Embedded capacity, and the tenant
+setting that allows image export. The human provides workspace, report, and
+semantic-model names; the skill uses `fab` to resolve their IDs before actions.
 
 See `docs/setup.md` for the local and remote workflows and `docs/maintenance.md`
 for controlled updates.
