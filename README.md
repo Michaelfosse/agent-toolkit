@@ -115,14 +115,27 @@ Expected skill locations:
 
 APM compiles unconditional instructions into target root context. Claude Code uses `CLAUDE.md` or `.claude/rules/`; OpenCode uses `AGENTS.md`.
 
-## Future Remote Installation
+## Install from GitHub
 
-No remote is configured yet. After this repository is created and tagged on GitHub, installation will use a pinned reference such as:
+Install the general toolkit package from the repository root:
 
 ```bash
-apm install Michaelfosse/agent-toolkit#v0.1.0 --target claude,opencode
+apm install 'Michaelfosse/agent-toolkit#main' --target claude,opencode
 apm compile --target claude,opencode
 ```
+
+Install the separately packaged Power BI developer profile from its monorepo
+subdirectory:
+
+```bash
+apm install 'Michaelfosse/agent-toolkit/packages/powerbi-developer#main' --target claude,opencode
+apm compile --target claude,opencode
+apm audit
+```
+
+The repository does not have a release tag yet, so these commands currently
+follow `main`. Use a release tag instead of `main` after one is published, and
+commit the generated `apm.lock.yaml` to preserve the resolved commits.
 
 For a private GitHub repository, authenticate separately with `gh auth login` or a read-only `GITHUB_APM_PAT`. Never place a token in `apm.yml`.
 
