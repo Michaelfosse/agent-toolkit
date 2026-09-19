@@ -36,14 +36,14 @@ From the Power BI workspace, install the public package for Claude Code and
 OpenCode:
 
 ```bash
-apm install 'Michaelfosse/agent-toolkit/packages/powerbi-developer#main' --target claude,opencode
+apm install Michaelfosse/agent-toolkit/packages/powerbi-developer -t claude,opencode
 apm compile --target claude,opencode
 apm audit
 ```
 
-The repository does not have a release tag yet, so the public command currently
-follows `main`. Commit the generated `apm.lock.yaml` to preserve the exact
-resolved commits. Use `apm install --frozen` for routine installs.
+With no `#ref`, APM resolves the repository's default branch. Commit the
+generated `apm.lock.yaml` to preserve the exact resolved commits. Use
+`apm install --frozen` for routine installs.
 
 While developing this package locally, install it by path from a separate
 consuming project:
